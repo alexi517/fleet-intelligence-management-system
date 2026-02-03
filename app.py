@@ -524,49 +524,6 @@ if 'model_path_used' not in st.session_state:
 if 'checked_paths' not in st.session_state:
     st.session_state.checked_paths = []
 
-# ==================== ADD THIS DEBUG SECTION ====================
-# Simple debug to check if model file exists
-st.sidebar.markdown("---")
-if st.sidebar.button("🔍 **Check Model File**"):
-    st.sidebar.write("### Checking for model file...")
-    
-    # Check current directory
-    current_dir = os.getcwd()
-    st.sidebar.write(f"**Current dir:** `{current_dir}`")
-    
-    # List files
-    files = os.listdir('.')
-    st.sidebar.write(f"**Files here ({len(files)}):**")
-    
-    # Look for model files
-    found_pkl = False
-    for file in sorted(files):
-        if file.endswith('.pkl'):
-            size = os.path.getsize(file)
-            st.sidebar.success(f"✅ **{file}** - {size:,} bytes")
-            found_pkl = True
-            
-            # Try to load it
-            try:
-                with open(file, 'rb') as f:
-                    model = pickle.load(f)
-                st.sidebar.success(f"   Can load: YES")
-                st.sidebar.write(f"   Type: {type(model)}")
-                if isinstance(model, dict):
-                    st.sidebar.write(f"   Keys: {list(model.keys())}")
-            except Exception as e:
-                st.sidebar.error(f"   Can load: NO - {str(e)[:100]}")
-        else:
-            st.sidebar.text(f"   {file}")
-    
-    if not found_pkl:
-        st.sidebar.error("❌ No .pkl files found!")
-        
-    # Check GitHub directly
-    st.sidebar.write("---")
-    st.sidebar.write("**GitHub file:**")
-    st.sidebar.markdown("[fleet_models.pkl](https://github.com/alexi517/fleet-intelligence-management-system/blob/main/fleet_models.pkl)")
-# ==================== END DEBUG SECTION ====================
 # Load ML models on first run
 if not st.session_state.model_load_attempted:
     st.session_state.model_load_attempted = True
